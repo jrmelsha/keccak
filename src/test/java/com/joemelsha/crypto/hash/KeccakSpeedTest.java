@@ -79,7 +79,7 @@ public class KeccakSpeedTest {
 			totalBytes += bytes;
 			totalElapse += elapse;
 
-			System.out.println("cur: " + toString(bytes, elapse) + "  \t  " + "avg: " + toString(totalBytes, totalElapse));
+			System.out.println(payloadSize + " (rand=" + gen.getAlgorithm() + "[seed=" + randomSeed + "]" + ")" + " => " + hash.toString() + " (native=" + nativeMemory + ")" + " => " + digestSize  + "  \t  " + "cur: " + toString(bytes, elapse) + "  \t  " + "avg: " + toString(totalBytes, totalElapse));
 		}
 	}
 
