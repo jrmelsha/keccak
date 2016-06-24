@@ -32,7 +32,7 @@ import org.junit.runners.Parameterized.*;
  * limitations under the License.
  */
 @RunWith(Parameterized.class)
-public class VerifyHash<T extends Keccak> {
+public class KeccakTest<T extends Keccak> {
 	@Parameters
 	public static Collection<Object[]> data() {
 		//@formatter:off
@@ -81,7 +81,7 @@ public class VerifyHash<T extends Keccak> {
 	public final int digestSizeBits;
 	public final Collection<ByteBuffer[]> testVectors = new LinkedList<ByteBuffer[]>();
 
-	public VerifyHash(Class<T> type, int digestSizeBits, String... inputs) {
+	public KeccakTest(Class<T> type, int digestSizeBits, String... inputs) {
 		this.type = type;
 		this.digestSizeBits = digestSizeBits;
 		for (int i = 0; i + 2 <= inputs.length;) {
