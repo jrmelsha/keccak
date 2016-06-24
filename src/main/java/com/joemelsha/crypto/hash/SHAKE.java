@@ -20,12 +20,12 @@ package com.joemelsha.crypto.hash;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class SHAKED extends Keccak {
-	public SHAKED(int digestSizeBits) {
+public class SHAKE extends Keccak {
+	public SHAKE(int digestSizeBits) {
 		super(digestSizeBits);
 	}
 
-	public SHAKED(SHAKED other) {
+	public SHAKE(SHAKE other) {
 		super(other);
 	}
 
@@ -43,8 +43,8 @@ public class SHAKED extends Keccak {
 	@Override
 	protected int stateSizeFor(int digestSizeBits) {
 		switch (digestSizeBits) {
-			case 288: return 1024;
 			case 128: return 1344;
+			case 256: return 1088;
 			default: throw new IllegalArgumentException("Invalid digestSizeBits: " + digestSizeBits + " ⊄ { 128, 256 }");
 		}
 	}
