@@ -357,6 +357,9 @@ public class Keccak {
 		Keccak.keccak(state);
 	}
 
+	/**
+	 * @formatter:off
+	 */
 	private static void keccak(long[] a) {
 		//@formatter:off
 		int c, i;
