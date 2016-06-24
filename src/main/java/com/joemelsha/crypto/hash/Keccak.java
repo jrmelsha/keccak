@@ -60,7 +60,7 @@ public class Keccak {
 		reset(stateSizeBits, digestSizeBits);
 	}
 
-	protected int stateSizeFor(int digestSizeBits) {
+	protected int stateSizeBitsFor(int digestSizeBits) {
 		//@formatter:off
 		switch (digestSizeBits) {
 			case 288: return 1024;
@@ -75,7 +75,7 @@ public class Keccak {
 	}
 
 	public void reset(int digestSizeBits) {
-		reset(stateSizeFor(digestSizeBits), digestSizeBits);
+		reset(stateSizeBitsFor(digestSizeBits), digestSizeBits);
 	}
 
 	protected void reset(int stateSizeBits, int digestSizeBits) {
