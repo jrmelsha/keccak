@@ -101,37 +101,38 @@ public class Keccak {
 
 	public void update(ByteBuffer in) {
 		int inBytes = in.remaining();
-		if (inBytes == 0)
+		if (inBytes <= 0)
 			return;
 
 		if (padded)
 			throw new IllegalStateException("Cannot update while padded");
 
 		int stateBits = this.stateBits;
-		if ((stateBits & 0x7) != 0) //this could be implemented but would introduce considerable performance degradation - also, it's never technically possible.
+		if ((stateBits & 0x7) > 0) //this could be implemented but would introduce considerable performance degradation - also, it's never technically possible.
 			throw new IllegalStateException("Cannot update while in bit-mode");
 
 		long[] state = this.state;
 		int stateBytes = stateBits >>> 3;
 
 		int stateBytesWord = stateBytes & 0x7;
-		if (stateBytesWord != 0) {
+		if (stateBytesWord > 0) {
 			//logically must have space at this point
-
-			int r = 8 - stateBytesWord;
-			int c = r > inBytes ? inBytes : r;
-
-			long w = state[stateBytes >>> 3];
-			for (int i = stateBytesWord << 3, end = i + (c << 3); ; ) {
-				w ^= (long) (in.get() & 0xff) << i;
-				if ((i += 8) >= end)
-					break;
-			}
-			state[stateBytes >>> 3] = w;
-
+			int c = 8 - stateBytesWord;
+			if (c > inBytes)
+				c = inBytes;
+			int i = stateBytes >>> 3;
+			long w = state[i];
 			stateBytes += c;
 			inBytes -= c;
-			if (inBytes == 0) {
+			stateBytesWord <<= 3;
+			c = stateBytesWord + (c << 3);
+			do {
+				w ^= (long) (in.get() & 0xff) << stateBytesWord;
+				stateBytesWord += 8;
+			} while (stateBytesWord < c);
+			state[i] = w;
+
+			if (inBytes > 0) {
 				this.stateBits = stateBytes << 3;
 				return;
 			}
@@ -141,55 +142,56 @@ public class Keccak {
 		int stateSizeWords = stateSizeBits >>> 6;
 
 		int inWords = inBytes >>> 3;
-		if (inWords != 0) {
+		if (inWords > 0) {
 			ByteOrder order = in.order();
 			try {
 				in.order(ByteOrder.LITTLE_ENDIAN);
 				do {
-					if (stateWords == stateSizeWords) {
+					if (stateWords >= stateSizeWords) {
 						Keccak.keccak(state);
 						stateWords = 0;
 					}
-					int r = stateSizeWords - stateWords;
-					int c = r > inWords ? inWords : r;
-					for (int i = stateWords, end = i + c; ; ) {
-						state[i] ^= in.getLong();
-						if (++i >= end)
-							break;
-					}
+					int c = stateSizeWords - stateWords;
+					if (c > inWords)
+						c = inWords;
 					inWords -= c;
-					stateWords += c;
+					c += stateWords;
+					do {
+						state[stateWords] ^= in.getLong();
+						stateWords++;
+					} while (stateWords < c);
 				} while (inWords != 0);
 			} finally {
 				in.order(order);
 			}
 			inBytes &= 0x7;
-			if (inBytes == 0) {
+			if (inBytes <= 0) {
 				this.stateBits = stateWords << 6;
 				return;
 			}
 		}
 
-		if (stateWords == stateSizeWords) {
+		if (stateWords >= stateSizeWords) {
 			Keccak.keccak(state);
 			stateWords = 0;
 		}
 		long w = state[stateWords];
-		for (int i = 0, end = inBytes << 3; ; ) {
+		inBytes <<= 3;
+		int i = 0;
+		do {
 			w ^= (long) (in.get() & 0xff) << i;
-			if ((i += 8) >= end)
-				break;
-		}
+			i += 8;
+		} while (i < inBytes);
 		state[stateWords] = w;
 
-		this.stateBits = (stateWords << 6) | (inBytes << 3);
+		this.stateBits = (stateWords << 6) | inBytes;
 	}
 
 	protected void updateBits(long in, int inBits) {
 		if (inBits < 0 || inBits > 64)
 			throw new IllegalArgumentException("Invalid valueBits: " + 0 + " < " + inBits + " > " + 64);
 
-		if (inBits == 0)
+		if (inBits <= 0)
 			return;
 
 		if (padded)
@@ -198,21 +200,21 @@ public class Keccak {
 		long[] state = this.state;
 		int stateBits = this.stateBits;
 		int stateBitsWord = stateBits & 0x3f;
-		if (stateBitsWord != 0) {
-			int r = 64 - stateBitsWord;
-			int c = r > inBits ? inBits : r;
+		if (stateBitsWord > 0) {
 			//logically must have space at this point
-
+			int c = 64 - stateBitsWord;
+			if (c > inBits)
+				c = inBits;
 			state[stateBits >>> 6] ^= (in & (-1L >>> c)) << stateBitsWord;
-			in >>>= c;
-			inBits -= c;
 			stateBits += c;
-			if (inBits == 0) {
+			inBits -= c;
+			if (inBits <= 0) {
 				this.stateBits = stateBits;
 				return;
 			}
+			in >>>= c;
 		}
-		if (stateBits == stateSizeBits) {
+		if (stateBits >= stateSizeBits) {
 			Keccak.keccak(state);
 			stateBits = 0;
 		}
@@ -254,7 +256,7 @@ public class Keccak {
 
 	public void digest(ByteBuffer out) {
 		int outBytes = out.remaining();
-		if (outBytes == 0)
+		if (outBytes <= 0)
 			return;
 
 		long[] state = this.state;
@@ -272,19 +274,19 @@ public class Keccak {
 			stateBytes = stateBits >>> 3;
 			int stateBytesWord = stateBytes & 0x7;
 			if (stateBytesWord != 0) {
-				int r = 8 - stateBytesWord;
-				int c = r > outBytes ? outBytes : r;
-
-				long w = state[stateBytes >>> 3] >>> (stateBytesWord << 3);
-				for (int i = 0; ; ) {
-					out.put((byte) w);
-					if (++i >= c)
-						break;
-					w >>>= 8;
-				}
+				int c = 8 - stateBytesWord;
+				if (c > outBytes)
+					c = outBytes;
+				long w = state[stateBytes >>> 3];
 				outBytes -= c;
 				stateBytes += c;
-				if (outBytes == 0) {
+				stateBytesWord <<= 3;
+				c = (c << 3) + stateBytesWord;
+				do {
+					out.put((byte) (w >>> stateBytesWord));
+					stateBytesWord += 8;
+				} while (stateBytesWord < c);
+				if (outBytes <= 0) {
 					this.stateBits = stateBytes << 3;
 					return;
 				}
@@ -295,46 +297,47 @@ public class Keccak {
 		int stateWords = stateBytes >>> 3;
 
 		int outWords = outBytes >>> 3;
-		if (outWords != 0) {
+		if (outWords > 0) {
 			ByteOrder order = out.order();
 			try {
 				out.order(ByteOrder.LITTLE_ENDIAN);
 				do {
-					if (stateWords == stateSizeWords) {
+					if (stateWords >= stateSizeWords) {
 						squeeze();
 						stateWords = 0;
 					}
-					int r = stateSizeWords - stateWords;
-					int c = r > outWords ? outWords : r;
-					for (int i = stateWords, end = i + c; ; ) {
-						out.putLong(state[i]);
-						if (++i >= end)
-							break;
-					}
+					int c = stateSizeWords - stateWords;
+					if (c > outWords)
+						c = outWords;
 					outWords -= c;
-					stateWords += c;
-				} while (outWords != 0);
+					c += stateWords;
+					do {
+						out.putLong(state[stateWords]);
+						stateWords++;
+					} while (stateWords < c);
+				} while (outWords > 0);
 			} finally {
 				out.order(order);
 			}
 			outBytes &= 0x7;
-			if (outBytes == 0) {
+			if (outBytes <= 0) {
 				this.stateBits = stateWords << 6;
 				return;
 			}
 		}
 
-		if (stateWords == stateSizeWords) {
+		if (stateWords >= stateSizeWords) {
 			squeeze();
 			stateWords = 0;
 		}
 		long w = state[stateWords];
-		for (int i = 0, end = outBytes << 3; ; ) {
+		outBytes <<= 3;
+		int i = 0;
+		do {
 			out.put((byte) (w >>> i));
-			if ((i += 8) >= end)
-				break;
-		}
-		this.stateBits = (stateWords << 6) | (outBytes << 3);
+			i += 8;
+		} while (i < outBytes);
+		this.stateBits = (stateWords << 6) | outBytes;
 	}
 
 	protected void squeeze() {
@@ -343,7 +346,7 @@ public class Keccak {
 
 	protected void pad() {
 		updateBits(0x1, 1);
-		if (stateBits == stateSizeBits) {
+		if (stateBits >= stateSizeBits) {
 			Keccak.keccak(state);
 			stateBits = 0;
 		}
@@ -352,6 +355,9 @@ public class Keccak {
 		Keccak.keccak(state);
 	}
 
+	/**
+	 * @formatter:off
+	 */
 	private static void keccak(long[] a) {
 		int c, i;
 		long x, a_10_;
