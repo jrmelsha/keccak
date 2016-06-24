@@ -77,7 +77,7 @@ public class Keccak {
 	protected void reset(int stateSizeBits, int digestSizeBits) {
 		if (stateSizeBits + digestSizeBits * 2 != MAX_STATE_SIZE)
 			throw new IllegalArgumentException("Invalid stateSizeBits + capacity: " + stateSizeBits + " + " + digestSizeBits + " * 2 != " + MAX_STATE_SIZE);
-		if (stateSizeBits <= 0 || (stateSizeBits & 0x3f) != 0)
+		if (stateSizeBits <= 0 || (stateSizeBits & 0x3f) > 0)
 			throw new IllegalArgumentException("Invalid stateSizeBits: " + stateSizeBits);
 
 		for (int i = 0; i < MAX_STATE_SIZE_WORDS; ++i)
@@ -162,7 +162,7 @@ public class Keccak {
 						state[stateWords] ^= in.getLong();
 						stateWords++;
 					} while (stateWords < c);
-				} while (inWords != 0);
+				} while (inWords > 0);
 			} finally {
 				in.order(order);
 			}
@@ -270,12 +270,12 @@ public class Keccak {
 			stateBits = 0;
 			stateBytes = 0;
 		} else {
-			if ((stateBits & 0x7) != 0)
+			if ((stateBits & 0x7) > 0)
 				throw new IllegalStateException("Cannot digest while in bit-mode"); //this could be implemented but would introduce considerable performance degradation - also, it's never technically possible.
 
 			stateBytes = stateBits >>> 3;
 			int stateBytesWord = stateBytes & 0x7;
-			if (stateBytesWord != 0) {
+			if (stateBytesWord > 0) {
 				int c = 8 - stateBytesWord;
 				if (c > outBytes)
 					c = outBytes;
