@@ -40,7 +40,7 @@ public class KeccakSpeedTest {
 		int payloadSize = 100 * 1024 * 1024; // input data size
 		boolean nativeMemory = true; //whether or not to use native memory buffers
 		Keccak hash = new SHA3(512); //Keccak, SHA3, or SHAKE
-		int digestSize = hash.getDigestSize(); //if you are using SHAKE, you could set this to anything.
+		int digestSize = hash.digestSize(); //if you are using SHAKE, you could set this to anything.
 		long randomSeed = 13636363L; //the input data seed
 
 		Thread.currentThread().setPriority(Thread.MAX_PRIORITY); //reduce random spikes

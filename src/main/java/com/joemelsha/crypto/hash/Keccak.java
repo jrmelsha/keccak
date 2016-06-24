@@ -48,7 +48,11 @@ public class Keccak {
 		return "Keccak-" + digestSizeBits;
 	}
 
-	public int getDigestSize() {
+	public int stateSize() {
+		return stateSizeBits >>> 3;
+	}
+
+	public int digestSize() {
 		return digestSizeBits >>> 3;
 	}
 
@@ -225,7 +229,7 @@ public class Keccak {
 	}
 
 	public ByteBuffer digest() {
-		return digest(getDigestSize());
+		return digest(digestSize());
 	}
 
 	public ByteBuffer digest(int outSize) {
@@ -239,7 +243,7 @@ public class Keccak {
 	}
 
 	public byte[] digestArray() {
-		return digestArray(getDigestSize());
+		return digestArray(digestSize());
 	}
 
 	public byte[] digestArray(int outSize) {
