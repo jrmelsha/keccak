@@ -41,7 +41,7 @@ public class SHAKE extends Keccak {
 	}
 
 	@Override
-	protected int stateSizeBitsFor(int digestSizeBits) {
+	protected int rateSizeBitsFor(int digestSizeBits) {
 		//@formatter:off
 		switch (digestSizeBits) {
 			case 128: return 1344;

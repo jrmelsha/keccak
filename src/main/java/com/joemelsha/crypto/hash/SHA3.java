@@ -46,7 +46,7 @@ public class SHA3 extends Keccak {
 	}
 
 	@Override
-	protected int stateSizeBitsFor(int digestSizeBits) {
+	protected int rateSizeBitsFor(int digestSizeBits) {
 		//@formatter:off
 		switch (digestSizeBits) {
 			case 224: return 1152;
