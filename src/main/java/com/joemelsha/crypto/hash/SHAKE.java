@@ -42,10 +42,12 @@ public class SHAKE extends Keccak {
 
 	@Override
 	protected int stateSizeFor(int digestSizeBits) {
+		//@formatter:off
 		switch (digestSizeBits) {
 			case 128: return 1344;
 			case 256: return 1088;
 			default: throw new IllegalArgumentException("Invalid digestSizeBits: " + digestSizeBits + " ⊄ { 128, 256 }");
 		}
+		//@formatter:on
 	}
 }

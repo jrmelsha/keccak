@@ -57,6 +57,7 @@ public class Keccak {
 	}
 
 	protected int stateSizeFor(int digestSizeBits) {
+		//@formatter:off
 		switch (digestSizeBits) {
 			case 288: return 1024;
 			case 128: return 1344;
@@ -66,6 +67,7 @@ public class Keccak {
 			case 512: return  576;
 			default: throw new IllegalArgumentException("Invalid digestSizeBits: " + digestSizeBits + " ⊄ { 128, 224, 256, 288, 384, 512 }");
 		}
+		//@formatter:on
 	}
 
 	public void reset(int digestSizeBits) {
@@ -355,10 +357,8 @@ public class Keccak {
 		Keccak.keccak(state);
 	}
 
-	/**
-	 * @formatter:off
-	 */
 	private static void keccak(long[] a) {
+		//@formatter:off
 		int c, i;
 		long x, a_10_;
 		long x0, x1, x2, x3, x4;
@@ -431,6 +431,7 @@ public class Keccak {
 
 			i++;
 		} while (i < 24);
+		//@formatter:on
 	}
 
 	private static final long[] RC = { 0x0000000000000001L, 0x0000000000008082L, 0x800000000000808AL, 0x8000000080008000L, 0x000000000000808BL, 0x0000000080000001L, 0x8000000080008081L,

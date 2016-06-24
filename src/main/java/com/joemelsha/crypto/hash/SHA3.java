@@ -47,6 +47,7 @@ public class SHA3 extends Keccak {
 
 	@Override
 	protected int stateSizeFor(int digestSizeBits) {
+		//@formatter:off
 		switch (digestSizeBits) {
 			case 224: return 1152;
 			case 256: return 1088;
@@ -54,5 +55,6 @@ public class SHA3 extends Keccak {
 			case 512: return  576;
 			default: throw new IllegalArgumentException("Invalid digestSizeBits: " + digestSizeBits + " ⊄ { 224, 256, 384, 512 }");
 		}
+		//@formatter:on
 	}
 }

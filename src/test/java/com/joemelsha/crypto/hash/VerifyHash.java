@@ -35,6 +35,7 @@ import org.junit.runners.Parameterized.*;
 public class VerifyHash<T extends Keccak> {
 	@Parameters
 	public static Collection<Object[]> data() {
+		//@formatter:off
 		return Arrays.asList(new Object[][] {
 			{ SHA3.class, 512, new String[] {
    				"616263", "b751850b1a57168a 5693cd924b6b096e 08f621827444f70d 884f5d0240d2712e 10e116e9192af3c9 1a7ec57647e39340 57340b4cf408d5a5 6592f8274eec53f0",
@@ -73,6 +74,7 @@ public class VerifyHash<T extends Keccak> {
   				"61626364656667686263646566676869636465666768696a6465666768696a6b65666768696a6b6c666768696a6b6c6d6768696a6b6c6d6e68696a6b6c6d6e6f696a6b6c6d6e6f706a6b6c6d6e6f70716b6c6d6e6f7071726c6d6e6f707172736d6e6f70717273746e6f707172737475", "7b6df6ff181173b6d7898d7ff63fb07b7c237daf471a5ae5602adbccef9ccf4b"
 			} }
 		});
+		//@formatter:on
 	}
 
 	public final Class<T> type;
@@ -82,7 +84,7 @@ public class VerifyHash<T extends Keccak> {
 	public VerifyHash(Class<T> type, int digestSizeBits, String... inputs) {
 		this.type = type;
 		this.digestSizeBits = digestSizeBits;
-		for (int i = 0; i + 2 <= inputs.length; ) {
+		for (int i = 0; i + 2 <= inputs.length;) {
 			String input = inputs[i++].replaceAll("\\s+", "").toLowerCase();
 			if (input.startsWith("0x"))
 				input = input.substring(2);
@@ -91,8 +93,7 @@ public class VerifyHash<T extends Keccak> {
 				output = output.substring(2);
 			ByteBuffer[] tv;
 			try {
-				tv = new ByteBuffer[] { ByteBuffer.wrap(Hex.decodeHex(input.toCharArray())),
-				                        ByteBuffer.wrap(Hex.decodeHex(output.toCharArray())) };
+				tv = new ByteBuffer[] { ByteBuffer.wrap(Hex.decodeHex(input.toCharArray())), ByteBuffer.wrap(Hex.decodeHex(output.toCharArray())) };
 			} catch (DecoderException x) {
 				throw new RuntimeException(x);
 			}
