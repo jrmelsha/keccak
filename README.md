@@ -8,3 +8,4 @@ Optimized Java Keccak/SHA3/SHAKED implementation
 	<version>1.1</version>
 </dependency>
 ```
+(Has not been uplodated yet, sorry!)
