@@ -43,19 +43,10 @@
 		<developer>
 			<id>jrmelsha</id>
 			<name>Joe Melsha</name>
-			<email>jrmelsha@olivet.edu</email>
 			<url>http://www.joemelsha.com</url>
 			<roles>
 				<role>developer</role>
 			</roles>
-			<timezone>UTC/GMT -6 hours</timezone>
-			<properties>
-				<facebook>http://www.facebook.com/jmelsha</facebook>
-				<twitter>http://twitter.com/MelshaJoe</twitter>
-				<ms>joe.melsha@live.com</ms>
-				<gmail>joe.melsha2@gmail.com</gmail>
-				<skype>joe.melsha</skype>
-			</properties>
 		</developer>
 	</developers>
 
