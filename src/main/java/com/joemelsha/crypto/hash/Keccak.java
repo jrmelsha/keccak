@@ -239,6 +239,7 @@ public class Keccak {
 	public ByteBuffer digest(int outSize, boolean direct) {
 		ByteBuffer buffer = direct ? ByteBuffer.allocateDirect(outSize) : ByteBuffer.allocate(outSize);
 		digest(buffer);
+		buffer.flip();
 		return buffer;
 	}
 
