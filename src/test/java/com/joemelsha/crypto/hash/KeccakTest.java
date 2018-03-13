@@ -138,8 +138,23 @@ public class KeccakTest<T extends Keccak> {
 			ByteBuffer out = ByteBuffer.allocate(tv[1].remaining());
 			hash.digest(out);
 			out.flip();
-			Assert.assertEquals("mismatch", out, tv[1]);
+			Assert.assertEquals("mismatch", toHexString(tv[1].duplicate()), toHexString(out.duplicate()));
 		}
+	}
+
+	public static final char[] HEX_TABLE = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+
+	private static String toHexString(ByteBuffer b) {
+		int len = b.remaining(), off = b.position();
+		char[] out = new char[len << 1];
+		char[] t = HEX_TABLE;
+		int i = 0;
+		for (len += off; off < len; ++off) {
+			int v = b.get(off) & 0xff;
+			out[i++] = t[v >>> 4];
+			out[i++] = t[v & 0xf];
+		}
+		return new String(out);
 	}
 
 	@After

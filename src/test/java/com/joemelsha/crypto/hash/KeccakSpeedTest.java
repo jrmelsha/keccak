@@ -37,6 +37,20 @@ public class KeccakSpeedTest {
 	 * -Xmx1G -Xms1G
 	 */
 	public static void main(String[] args) throws Throwable {
+		//pre-validation!
+		KeccakTest<SHA3> test = new KeccakTest<SHA3>(SHA3.class, 512, new String[] {
+		                                                               				"616263", "b751850b1a57168a 5693cd924b6b096e 08f621827444f70d 884f5d0240d2712e 10e116e9192af3c9 1a7ec57647e39340 57340b4cf408d5a5 6592f8274eec53f0",
+		                                                             				"", "a69f73cca23a9ac5 c8b567dc185a756e 97c982164fe25859 e0d1dcc1475c80a6 15b2123af1f5f94c 11e3e9402c3ac558 f500199d95b6d3e3 01758586281dcd26",
+		                                                             				"6162636462636465636465666465666765666768666768696768696a68696a6b696a6b6c6a6b6c6d6b6c6d6e6c6d6e6f6d6e6f706e6f7071", "04a371e84ecfb5b8 b77cb48610fca818 2dd457ce6f326a0f d3d7ec2f1e91636d ee691fbe0c985302 ba1b0d8dc78c0863 46b533b49c030d99 a27daf1139d6e75e",
+		                                                             				"61626364656667686263646566676869636465666768696a6465666768696a6b65666768696a6b6c666768696a6b6c6d6768696a6b6c6d6e68696a6b6c6d6e6f696a6b6c6d6e6f706a6b6c6d6e6f70716b6c6d6e6f7071726c6d6e6f707172736d6e6f70717273746e6f707172737475", "afebb2ef542e6579 c50cad06d2e578f9 f8dd6881d7dc824d 26360feebf18a4fa 73e3261122948efc fd492e74e82e2189 ed0fb440d187f382 270cb455f21dd185",
+		                                                            				"48656c6c6f2c20776f726c6421", "8e47f1185ffd014d238fabd02a1a32defe698cbf38c037a90e3c0a0a32370fb52cbd641250508502295fcabcbf676c09470b27443868c8e5f70e26dc337288af"
+		                                                            			});
+		test.init();
+		test.testValid();
+
+		System.out.println("VALID");
+
+
 		int payloadSize = 100 * 1024 * 1024; // input data size
 		boolean nativeMemory = true; //whether or not to use native memory buffers
 		Keccak hash = new SHA3(512); //Keccak, SHA3, or SHAKE
