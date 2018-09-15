@@ -1,7 +1,7 @@
 package com.joemelsha.crypto.hash;
 
 /**
- * @author Joseph Robert Melsha (jrmelsha@olivet.edu)
+ * @author Joseph Robert Melsha (joe.melsha@live.com)
  *
  * Source: https://github.com/jrmelsha/keccak
  * Created: Jun 23, 2016
