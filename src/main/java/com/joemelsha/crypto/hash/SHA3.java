@@ -41,11 +41,6 @@ public class SHA3 extends Keccak {
 	}
 
 	@Override
-	protected void squeeze() {
-		throw new UnsupportedOperationException("SHA-3 cannot be squeezed");
-	}
-
-	@Override
 	protected int rateSizeBitsFor(int digestSizeBits) {
 		//@formatter:off
 		switch (digestSizeBits) {
