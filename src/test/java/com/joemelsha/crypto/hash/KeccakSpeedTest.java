@@ -48,6 +48,10 @@ public class KeccakSpeedTest {
 		test.init();
 		test.testValid();
 
+		KeccakConsecutiveTest test2 = new KeccakConsecutiveTest();
+		test2.init();
+		test2.testValid();
+
 		System.out.println("VALID");
 
 
