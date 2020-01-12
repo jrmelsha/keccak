@@ -211,7 +211,7 @@ public class Keccak {
 			int c = 64 - rateBitsWord;
 			if (c > inBits)
 				c = inBits;
-			state[rateBits >>> 6] ^= (in & (-1L >>> c)) << rateBitsWord;
+			state[rateBits >>> 6] ^= (in & (-1L >>> -c)) << rateBitsWord;
 			rateBits += c;
 			inBits -= c;
 			if (inBits <= 0) {
@@ -224,7 +224,7 @@ public class Keccak {
 			Keccak.keccak(state);
 			rateBits = 0;
 		}
-		state[rateBits >>> 6] ^= in & (-1L >>> inBits);
+		state[rateBits >>> 6] ^= in & (-1L >>> -inBits);
 		this.rateBits = rateBits + inBits;
 	}
 
